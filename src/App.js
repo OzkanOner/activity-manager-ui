@@ -8,6 +8,8 @@ import RegisterPage from './RegisterPage';
 import PrivateRoute from './PrivateRoute';
 import Logout from './LogoutPage';
 
+import NotFoundPage from './NotFoundPage';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -45,6 +47,8 @@ function App() {
         <Route path="/logout" element={<Logout />} />
         
         <Route path="/home" element={<PrivateRoute element={<HomePage />} />} />
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );

@@ -1,25 +1,52 @@
-import 'bootstrap/dist/css/bootstrap.css';
-import { Button } from 'react-bootstrap';
-import './index.css';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+
+import HomePage from './HomePage';
+import LoginPage from './LoginPage';
+import RegisterPage from './RegisterPage';
+import PrivateRoute from './PrivateRoute';
+import Logout from './LogoutPage';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const isExpired = decoded.exp < Date.now() / 1000;
+
+        if (isExpired) {
+          localStorage.removeItem("token");
+          setIsAuthenticated(false);
+        } else {
+          setIsAuthenticated(true);
+        }
+      } catch (err) {
+        localStorage.removeItem("token");
+        setIsAuthenticated(false);
+      }
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, []);
+
   return (
-    <div>
-      <h1 className="text-3xl font-bold underline bg-teal-500 p-4 text-center text-sky-100">
-        ENV: {process.env.NODE_ENV}
-      </h1>
-      <div className="p-4 my-4 bg-slate-300 flex items-center justify-evenly">
-        <Button variant="primary">Primary</Button>
-        <Button variant="secondary">Secondary</Button>
-        <Button variant="success">Success</Button>
-        <Button variant="warning">Warning</Button>
-        <Button variant="danger">Danger</Button>
-        <Button variant="info">Info</Button>
-        <Button variant="light">Light</Button>
-        <Button variant="dark">Dark</Button>
-        <Button variant="link">Link</Button>
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />} />
+
+        <Route path="/login" element={isAuthenticated ? <Navigate to="/home" /> : <LoginPage />} />
+        <Route path="/register" element={isAuthenticated ? <Navigate to="/home" /> : <RegisterPage />} />
+        <Route path="/logout" element={<Logout />} />
+        
+        <Route path="/home" element={<PrivateRoute element={<HomePage />} />} />
+      </Routes>
+    </Router>
   );
 }
 

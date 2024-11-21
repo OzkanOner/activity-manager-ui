@@ -1,5 +1,5 @@
-import { useParams } from "react-router-dom";
-import { Col, Container, Row, Modal, Card, Button, Form, Table, ButtonGroup } from "react-bootstrap";
+import { useParams, useNavigate } from "react-router-dom";
+import { Col, Container, Row, Modal, Card, Button, Form, Table, ButtonGroup, Spinner  } from "react-bootstrap";
 import React, { useState, useEffect, useRef } from 'react';
 import * as createjs from '@createjs/easeljs';
 import axios from "axios";
@@ -20,6 +20,8 @@ function TaskPage() {
     const token = localStorage.getItem('token');
     const decodedToken = jwtDecode(token);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         const canvas = canvasRef.current;
     
@@ -35,7 +37,7 @@ function TaskPage() {
     
         for (let index = 0; index < userCount; index++) {
             let xPos = (index === 0) ? (canvas.width / userCount) / 2 : lastXPos + (canvas.width / userCount);
-            users.push({ name: task?.userActivities?.$values[index].user.username + index, x: xPos, y: 400 });
+            users.push({ name: task?.userActivities?.$values[index].user.username, x: xPos, y: 400 });
             lastXPos = xPos;
         }
     
@@ -109,11 +111,41 @@ function TaskPage() {
     }, [id]);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return (
+            <Container className="d-flex justify-content-center align-items-center">
+                <Card className="text-center shadow-lg border-0 w-full max-w-md p-6">
+                    <Card.Body>
+                        <h2 className="text-2xl font-semibold text-indigo-600 mb-4">Activity is Loading...</h2>
+                        <div className="flex justify-center mb-4">
+                            <Spinner animation="border" variant="primary" />
+                        </div>
+                        <p className="text-gray-600">Please wait while we fetch the activity data. It might take a few seconds.</p>
+                    </Card.Body>
+                </Card>
+            </Container>
+        );
     }
 
-    if (!task) {
-        return <div>No activity data found</div>;
+    if (!task) {        
+        return (
+            <Container className="d-flex justify-content-center align-items-start">
+                <Card className="text-center shadow-lg border-0 w-100" style={{ maxWidth: '400px' }}>
+                    <Card.Body>
+                        <h2 className="text-2xl font-bold text-indigo-600 mb-4">Activity Not Found</h2>
+                        <p className="text-gray-600 mb-4">
+                            Sorry, we couldn't find the activity you're looking for. It might have been removed or never existed.
+                        </p>
+                        <Button
+                            variant="primary"
+                            className="w-100 py-2"
+                            href="/home"
+                        >
+                            Back to Home
+                        </Button>
+                    </Card.Body>
+                </Card>
+            </Container>
+        );
     }
 
     const handleInputChange = (e) => {
@@ -171,6 +203,24 @@ function TaskPage() {
         setShowModal(false);
         setShowUserModal(false);
         setLoading(false);
+    };
+
+    const handleDelete = async (e) => {
+        e.preventDefault();
+        const answer = window.confirm("Are you sure you want to delete this activity?");
+        
+        if (answer) {
+            await axios.delete(
+                `${process.env.REACT_APP_API_URL}${process.env.REACT_APP_API_TASK_DELETE_PATH}/${id}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+
+            navigate('/home');
+        }
     };
 
     const completeAssignment = async () => {
@@ -252,7 +302,7 @@ function TaskPage() {
                             <Card.Footer>
                                 <ButtonGroup aria-label="actions" className="flex">
                                     <Button variant="primary" onClick={handleShow}>Edit Activity</Button>
-                                    <Button variant="danger">Delete Activity</Button>
+                                    <Button variant="danger" onClick={handleDelete}>Delete Activity</Button>
                                 </ButtonGroup>
                             </Card.Footer>
                         </Card>

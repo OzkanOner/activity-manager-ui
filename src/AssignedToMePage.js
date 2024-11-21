@@ -59,7 +59,13 @@ function AssignedToMePage() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {tasks?.sort((a, b) => {return b.id - a.id}).map((task, index) => (
+                                    {tasks?.sort((a, b) => b.id - a.id).map((task, index) => {
+                                        const today = new Date();
+                                        const dueDate = new Date(task.dueDate);
+                                        
+                                        const isDueToday = today.toDateString() === dueDate.toDateString();
+
+                                        return (
                                             <tr key={task.id}>
                                                 <td>{task.id}</td>
                                                 <td>{task.title}</td>
@@ -80,13 +86,23 @@ function AssignedToMePage() {
                                                         hour: '2-digit',
                                                         minute: '2-digit'
                                                     })}
+                                                    {isDueToday && (
+                                                        <span className="text-red-500 ml-2 font-semibold">⚠️ Due Today!</span>
+                                                    )}
                                                 </td>
-                                                <td><span className={`font-bold ${task.isCompleted ? "text-green-500" : "text-red-500"}`}>{(task.isCompleted ? "Completed" : "Not completed")}</span></td>
+                                                <td>
+                                                    <span className={`font-bold ${task.isCompleted ? "text-green-500" : "text-red-500"}`}>
+                                                        {task.isCompleted ? "Completed" : "Not completed"}
+                                                    </span>
+                                                </td>
                                                 <td width="10">
-                                                    <a className="font-semibold text-xs text-white bg-indigo-500 px-2 py-1 rounded-md hover:bg-indigo-700 transition" href={`/task/${task.id}`}>DETAILS&nbsp;&gt;</a>
+                                                    <a className="font-semibold text-xs text-white bg-indigo-500 px-2 py-1 rounded-md hover:bg-indigo-700 transition" href={`/task/${task.id}`}>
+                                                        DETAILS&nbsp;&gt;
+                                                    </a>
                                                 </td>
                                             </tr>
-                                        ))}
+                                        );
+                                    })}
                                     </tbody>
                                 </Table>
                             </Card.Body>

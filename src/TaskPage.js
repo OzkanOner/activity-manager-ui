@@ -23,7 +23,7 @@ function TaskPage() {
     useEffect(() => {
         const canvas = canvasRef.current;
     
-        if (!canvas) return; // canvas null ise işlem yapma
+        if (!canvas) return;
     
         const stage = new createjs.Stage(canvas);
     
@@ -113,7 +113,7 @@ function TaskPage() {
     }
 
     if (!task) {
-        return <div>No task data found</div>;
+        return <div>No activity data found</div>;
     }
 
     const handleInputChange = (e) => {
@@ -197,16 +197,18 @@ function TaskPage() {
             <Container fluid="fluid" className="p-0">
                 <Row fluid="fluid">
                     <Col>
-                        <Card className="bg-indigo-100 rounded-lg shadow-md mb-10">
+                        <Card className="bg-slate-100 rounded-lg shadow-md mb-10">
+                            <Card.Header>
+                                <Card.Title className="text-2xl mb-0 font-bold text-indigo-800">{task.title}</Card.Title>
+                            </Card.Header>
                             <Card.Body>
-                                <Card.Title className="text-2xl font-bold text-indigo-800">{task.title}</Card.Title>
                                 <Card.Text className="text-gray-700 mt-4">{task.description}</Card.Text>
 
                                 <Row className="mt-6">
                                     <Col md={6} className="mb-4">
                                         <Card className="p-4 bg-white rounded-lg shadow-sm border">
                                         <Card.Body>
-                                            <Card.Title className="text-lg font-semibold text-indigo-600">Task Number:</Card.Title>
+                                            <Card.Title className="text-lg font-semibold text-indigo-600">Activity Number:</Card.Title>
                                             <Card.Text className="text-gray-800">{task.id}</Card.Text>
                                         </Card.Body>
                                         </Card>
@@ -256,9 +258,11 @@ function TaskPage() {
                         </Card>
                     </Col>
                     <Col>
-                        <Card className="bg-indigo-100 rounded-lg shadow-md mb-10">
+                        <Card className="bg-slate-100 rounded-lg shadow-md mb-10">
+                            <Card.Header>
+                                <Card.Title className="text-2xl mb-0 font-bold text-indigo-800">Assigned Users</Card.Title>
+                            </Card.Header>
                             <Card.Body>
-                                <Card.Title className="text-2xl font-bold text-indigo-800">Assigned Users</Card.Title>
                                 <div className="text-gray-700 mt-4">
                                     <Table striped bordered>
                                         <thead>
@@ -301,9 +305,11 @@ function TaskPage() {
                 </Row>
                 <Row>
                     <Col>
-                        <Card className="bg-indigo-100 rounded-lg shadow-md d-flex flex-column align-items-center justify-content-center">
-                            <Card.Body>
-                                <h1 className="text-2xl font-bold text-indigo-800 mb-3">Task Graph</h1>
+                        <Card className="bg-slate-100 rounded-lg shadow-md">
+                            <Card.Header>
+                                <Card.Title className="text-2xl d-block w-100 mb-0 font-bold text-indigo-800 text-center">Activity Graph</Card.Title>
+                            </Card.Header>
+                            <Card.Body className="d-flex flex-column align-items-center justify-content-center">
                                 <canvas ref={canvasRef} width="800" height="600" style={{ border: '1px solid #ccc', backgroundColor: '#f5f5f5', borderRadius: 10 }} />
                             </Card.Body>
                         </Card>
@@ -313,7 +319,7 @@ function TaskPage() {
             
             <Modal show={showModal} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Edit Task</Modal.Title>
+                    <Modal.Title>Edit Activity</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
@@ -382,15 +388,15 @@ function TaskPage() {
                                 defaultValue=""
                             >
                                 {(() => {
-                                    const filteredUsers = allUsers.filter(
-                                        user => !task.userActivities.$values.some(activity => activity.userId === user.id)
+                                    const filteredUsers = allUsers?.filter(
+                                        user => !task?.userActivities?.$values?.some(activity => activity.userId === user.id)
                                     );
 
-                                    return filteredUsers.length > 0 ? (
-                                        filteredUsers.map(user => (
-                                        <option key={user.id} value={user.id}>
-                                            {user.username}
-                                        </option>
+                                    return filteredUsers?.length > 0 ? (
+                                        filteredUsers?.map(user => (
+                                            <option key={user.id} value={user.id}>
+                                                {user.username}
+                                            </option>
                                         ))
                                     ) : (
                                         <option value="" disabled>No available users to show</option>

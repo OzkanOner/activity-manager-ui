@@ -1,7 +1,102 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Col, Container, Row } from "react-bootstrap";
+import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 
 function Navbar() {
+    /* =====================NOTIFY============================= */
+
+  const token = localStorage.getItem('token');
+  const decodedToken = jwtDecode(token);
+
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const location = window.location.pathname;
+
+  const lastCheckedDate = localStorage.getItem('lastCheckedDate');
+
+  if (!lastCheckedDate) {
+    const currentDate = new Date().toISOString();
+    localStorage.setItem('lastCheckedDate', currentDate);
+  }
+
+  useEffect(() => {
+    Notification.requestPermission().then(permission => {
+      if (permission === 'granted') {
+        console.log('Bildirim izni verildi');
+      }
+    });
+  }, []);
+
+  const fetchTasks = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}${process.env.REACT_APP_API_TASK_LIST_USER_ASSIGNED_PATH}/${decodedToken.sub}`,
+          {
+              headers: {
+                  'Authorization': `Bearer ${token}`
+              }
+          }
+      );
+
+      const tasks = response?.data?.$values;
+      setTasks(tasks);
+
+      const newTasks = tasks?.filter(task => {
+        return new Date(task.createdDate) > new Date(lastCheckedDate);
+      });
+
+      if (newTasks?.length > 0) {
+        showNotification(newTasks);
+        const currentDate = new Date().toISOString();
+        localStorage.setItem('lastCheckedDate', currentDate);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.error('Error fetching tasks:', error);
+    }
+  };
+
+  const showNotification = (newTasks) => {
+    newTasks.forEach(task => {
+      new Notification(`New Assignment: ${task.title}`, {
+        body: `A new task has been assigned: ${task.description}`,
+        icon: '/new-task.png',
+      });
+    });
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      console.log("URL changed:", window.location.pathname);
+    };
+  
+    window.addEventListener('popstate', handlePopState);
+  
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [location]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchTasks();
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);  
+
+  /* =====================NOTIFY============================= */
+
+
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {

@@ -251,8 +251,8 @@ function TaskPage() {
                             </Card.Body>
                             <Card.Footer>
                                 <ButtonGroup aria-label="actions" className="flex">
-                                    <Button variant="primary" onClick={handleShow}>Edit Task</Button>
-                                    <Button variant="danger">Delete Task</Button>
+                                    <Button variant="primary" onClick={handleShow}>Edit Activity</Button>
+                                    <Button variant="danger">Delete Activity</Button>
                                 </ButtonGroup>
                             </Card.Footer>
                         </Card>

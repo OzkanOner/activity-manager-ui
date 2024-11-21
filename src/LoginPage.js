@@ -109,7 +109,7 @@ function LoginPage() {
                                 <Button
                                     variant="primary"
                                     type="submit"
-                                    className="text-lg text-white w-full py-3 rounded-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    className="text-lg text-white w-full py-3 rounded-lg font-medium bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                 >
                                     Sign In
                                 </Button>

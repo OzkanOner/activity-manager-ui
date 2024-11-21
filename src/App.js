@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
-import HomePage from './HomePage';
 import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
 import PrivateRoute from './PrivateRoute';
 import Logout from './LogoutPage';
+import Layout from './Layout';
+
+import HomePage from './HomePage';
+import TaskPage from './TaskPage';
 
 import NotFoundPage from './NotFoundPage';
 
@@ -46,7 +49,10 @@ function App() {
         <Route path="/register" element={isAuthenticated ? <Navigate to="/home" /> : <RegisterPage />} />
         <Route path="/logout" element={<Logout />} />
         
-        <Route path="/home" element={<PrivateRoute element={<HomePage />} />} />
+        <Route element={<Layout />}>
+          <Route path="/home" element={<PrivateRoute element={<HomePage />} />} />
+          <Route path="/task/:id" element={<PrivateRoute element={<TaskPage />} />} />
+        </Route>
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

@@ -21,11 +21,11 @@ function Navbar() {
                         <div className="hidden md:flex space-x-6">
                             <a href="/home" className="text-white hover:bg-indigo-700 px-3 py-2 rounded-md transition">Home</a>
                             
-                            <a href="/tasks/created" className="text-white hover:bg-indigo-700 px-3 py-2 rounded-md transition">
+                            <a href="/tasks/createdbyme" className="text-white hover:bg-indigo-700 px-3 py-2 rounded-md transition">
                                 Created by Me
                             </a>
                             
-                            <a href="/tasks/assigned" className="text-white hover:bg-indigo-700 px-3 py-2 rounded-md transition">
+                            <a href="/tasks/assignedtome" className="text-white hover:bg-indigo-700 px-3 py-2 rounded-md transition">
                                 Assigned to Me
                             </a>
                         </div>
@@ -57,10 +57,10 @@ function Navbar() {
                                 <a href="/home" className="text-white text-lg py-2 px-6 rounded-md hover:bg-indigo-700 transition w-full text-center">
                                     Home
                                 </a>
-                                <a href="/tasks/created" className="text-white text-lg py-2 px-6 rounded-md hover:bg-indigo-700 transition w-full text-center">
+                                <a href="/tasks/createdbyme" className="text-white text-lg py-2 px-6 rounded-md hover:bg-indigo-700 transition w-full text-center">
                                     Created by Me
                                 </a>
-                                <a href="/tasks/assigned" className="text-white text-lg py-2 px-6 rounded-md hover:bg-indigo-700 transition w-full text-center">
+                                <a href="/tasks/assignedtome" className="text-white text-lg py-2 px-6 rounded-md hover:bg-indigo-700 transition w-full text-center">
                                     Assigned to Me
                                 </a>
                             </div>

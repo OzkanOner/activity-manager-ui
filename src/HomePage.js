@@ -24,7 +24,7 @@ function HomePage() {
         setLoading(true);
         try {
             const response = await axios.get(
-                `${process.env.REACT_APP_API_URL}${process.env.REACT_APP_API_TASK_DETAIL_PATH}`,
+                `${process.env.REACT_APP_API_URL}${process.env.REACT_APP_API_TASK_LIST_PATH}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -115,7 +115,7 @@ function HomePage() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {tasks.sort((a, b) => {return b.id - a.id}).map((task, index) => (
+                                        {tasks?.sort((a, b) => {return b.id - a.id})?.map((task, index) => (
                                             <tr key={task.id}>
                                                 <td>{task.id}</td>
                                                 <td>{task.title}</td>

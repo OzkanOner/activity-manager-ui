@@ -14,6 +14,7 @@ import TaskPage from './TaskPage';
 import NotFoundPage from './NotFoundPage';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import CreatedByMePage from './CreatedByMePage';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -51,6 +52,7 @@ function App() {
         
         <Route element={<Layout />}>
           <Route path="/home" element={<PrivateRoute element={<HomePage />} />} />
+          <Route path="/tasks/createdbyme" element={<PrivateRoute element={<CreatedByMePage />} />} />
           <Route path="/task/:id" element={<PrivateRoute element={<TaskPage />} />} />
         </Route>
 
